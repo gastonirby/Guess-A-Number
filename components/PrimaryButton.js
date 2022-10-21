@@ -1,17 +1,14 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 
-function PrimaryButton({ children }) {
-    function pressHandler() {
-        return (
-            console.log('pressed')
-        )
-    }
+function PrimaryButton({ children, onPress }) {
 
     return (
         <View style={styles.buttonOuterContainer}>
             <Pressable 
+                // this if statement is specific for ios
+                // if pressed, apply both styles to the button. otherwise apply only the one style
                 style={({pressed}) => pressed ? [styles.buttonInnerContainer, styles.pressed] : styles.buttonInnerContainer}
-                onPress={pressHandler}
+                onPress={onPress}
                 android_ripple={{color: '#640233'}}
             >
             
