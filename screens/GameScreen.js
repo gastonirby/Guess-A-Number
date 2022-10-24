@@ -19,7 +19,7 @@ function generateRandomBetween(min, max, exclude) {
         return rndNum;
     }
 }
-
+ 
 let minBoundary = 1;
 let maxBoundary = 100;
 
