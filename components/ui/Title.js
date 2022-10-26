@@ -1,4 +1,4 @@
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, Platform } from 'react-native';
 import Colors from '../constants/colors';
 
 
@@ -16,7 +16,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         textAlign: 'center',
-        borderWidth: 2,
+        borderWidth: Platform.select({ ios: 0, android: 2 }),
+        // This is also a way of writing the above code:
+        // borderWidth: Platform.OS === 'android' ? 2 : 0,
+        // OR different components can be made for both devices ex: 'Title.android.js & Title.ios.js
         borderColor: Colors.accent500,
         padding: 12,
         maxWidth: '80%',
