@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, Text, FlatList } from 'react-native';
+import { View, StyleSheet, Alert, FlatList, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import Title from '../components/ui/Title';
@@ -31,6 +31,7 @@ function GameScreen({userNumber, onGameOver}) {
     );
     const [currentGuess, setCurrentGuess] = useState(initialGuess);
     const [guessRounds, setGuessRounds] = useState([initialGuess]);
+    const { width, height } = useWindowDimensions();
 
     useEffect(() => {
         if (currentGuess === userNumber) {
@@ -68,27 +69,54 @@ function GameScreen({userNumber, onGameOver}) {
 
     const guessRoundsListLength = guessRounds.length;
 
+    let content = (
+        <>
+            <NumberContainer>{currentGuess}</NumberContainer>
+            <Card>
+                <Instruction style={styles.instructionText}>Higher or Lower?</Instruction>
+                <View style={styles.buttonsContainer}>
+                    <View style={styles.button}>
+                        <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
+                            <Ionicons name='md-remove' size={24} color='white' />
+                        </PrimaryButton>
+                    </View>
+                    <View style={styles.button}>
+                        <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
+                            <Ionicons name='md-add' size={24} color='white' />
+                        </PrimaryButton>
+                    </View>
+                </View>
+            </Card>
+        </>
+    );
+
+    if (width > 500) {
+        content = (
+            <>
+                <View style={styles.buttonsContainerWide}>
+
+                    <View style={styles.buttonContainer}>
+                        <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
+                            <Ionicons name='md-remove' size={24} color='white' />
+                        </PrimaryButton>
+                    </View>
+
+                    <NumberContainer>{currentGuess}</NumberContainer>
+
+                    <View style={styles.buttonContainer}>
+                        <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
+                            <Ionicons name='md-add' size={24} color='white' />
+                        </PrimaryButton>
+                    </View>
+                </View>
+            </>
+        )
+    }
+
     return (
         <View style={styles.screen} >
-            <View>
                 <Title>Opponent's Guess</Title>
-                <NumberContainer>{currentGuess}</NumberContainer>
-                <Card>
-                    <Instruction style={styles.instructionText}>Higher or Lower?</Instruction>
-                    <View style={styles.buttonContainer}>
-                        <View style={styles.button}>
-                            <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
-                                <Ionicons name='md-remove' size={24} color='white' />
-                            </PrimaryButton>
-                        </View>
-                        <View style={styles.button}>
-                            <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
-                            <Ionicons name='md-add' size={24} color='white' />
-                            </PrimaryButton>
-                        </View>
-                    </View>
-                </Card>
-            </View>
+                {content}
             <View style={styles.listContainer} >
                 <FlatList 
                     data={guessRounds} 
@@ -116,8 +144,16 @@ const styles = StyleSheet.create({
     instructionText: {
         marginBottom: 12,
     },
+    buttonsContainer: {
+        flexDirection: 'row',
+    },
     buttonContainer: {
         flexDirection: 'row',
+        alignItems: 'center'
+    },
+    buttonsContainerWide: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     button: {
         flex: 1
